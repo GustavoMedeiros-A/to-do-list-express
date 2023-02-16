@@ -1,14 +1,10 @@
 const express = require('express')
+const checkListRouter = require('./src/routes/checklist')
 
 const app = express()
+app.use(express.json())
 
-app.get('/', (req, res) => {
-    res.send("<h1>To do Lista</h1>")
-})
-
-app.get('/json', (req, res) => {
-    res.json({title: "comprar cafe", done: "true"})
-})
+app.use('/checklists', checkListRouter);
 
 app.listen(3000, () => {
     console.log("listening on http://localhost:3000")
