@@ -4,9 +4,13 @@ const router = express.Router();
 
 const Checklist = require("../models/checklist")
 
-router.get('/', (req, res) => {
-    console.log("passamos aqui")
-    res.send();
+router.get('/', async (req, res) => {
+    try {
+        let checklist = await Checklist.find()
+        res.status(200).json(checklist)
+    } catch (err) {
+        res.status(500).json(err)
+    }
 })
 
 router.post('/', async (req, res)  => {
@@ -20,19 +24,35 @@ router.post('/', async (req, res)  => {
     }
 })
 
-router.get('/:id', (req, res) => {
-    console.log(req.params.id);
-    res.send(`ID: ${req.params.id}`)
+router.get('/:id', async (req, res) => {
+    try {
+        let checklist = await Checklist.findById(req.params.id);
+        res.status(200).json(checklist);
+    } catch (err) {
+        res.status(422).json(err);
+    }
+
 })
 
-router.put('/:id', (req, res) => {
-    console.log(req.body)  
-    res.send(`PUT ID: ${req.params.id}`) 
+router.put('/:id', async (req, res) => {
+    let { name } = req.body;
+
+    try {
+        let checklist = await Checklist.findByIdAndUpdate(req.params.id, {name}, {new: true}); //Pega o id, atualiza o nome, e retorna o novo nome no postman ja atualizado
+        res.status(200).json(checklist);
+    } catch (err) {
+        res.status(422).json(err);
+    }
+
 })
 
-router.delete('/:id', (req, res) => {
-    console.log(req.body)  
-    res.send(`DELETE ID: ${req.params.id}`) 
+router.delete('/:id', async (req, res) => {
+    try {
+        let checklist =  await Checklist.findByIdAndRemove(req.params.id);
+        res.status(200).json(checklist);
+    } catch (err) {
+        res.status(422).json(err);
+    }
 })
 
 module.exports = router;    
