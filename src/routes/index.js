@@ -6,5 +6,4 @@ router.get('/', async (req, res) => {
     res.render('pages/index.ejs')
 })
 
-
 module.exports = router;
