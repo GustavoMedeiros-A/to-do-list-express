@@ -11,7 +11,7 @@ require('./config/database')
 const app = express()
 app.use(express.json())
 app.use(express.urlencoded({extended: true})) //Middleware que pega os valores do form e deixa disponivel
-app.use(methodOverride('_method'))
+app.use(methodOverride('_method', {methods: ["POST", "GET"]}))
 
 app.use(express.static(path.join(__dirname, 'public'))) // Arquivos estáticos vao ficar na pasta Public
 // Arquivos estáticos (como bulma) vao retornar sempre a mesma coisa

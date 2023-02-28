@@ -22,6 +22,15 @@ router.get('/new', async (req, res) => {
     }
 })
 
+router.get('/:id/edit', async (req, res) => {
+    try{
+        let checklist = await Checklist.findById(req.params.id);
+        res.status(200).render('checklists/edit', { checklist: checklist})
+    } catch(error) {
+        res.status(500).render('pages/error', { error: 'Erro ao exibir a edição de Lista de tarefas' })
+    }
+})
+
 router.post('/', async (req, res)  => {
     let { name } = req.body.checklist;
     let checklist = new Checklist({name})
@@ -45,13 +54,15 @@ router.get('/:id', async (req, res) => {
 })
 
 router.put('/:id', async (req, res) => {
-    let { name } = req.body;
+    let { name } = req.body.checklist // Vindo da page Form.ejs
+    let checklist = await Checklist.findById(req.params.id)
 
     try {
-        let checklist = await Checklist.findByIdAndUpdate(req.params.id, {name}, {new: true}); //Pega o id, atualiza o nome, e retorna o novo nome no postman ja atualizado
-        res.status(200).json(checklist);
-    } catch (err) {
-        res.status(422).json(err);
+        await checklist.update({name}); //Pega o checklist com base no id na linha de cima, e atualiza ele
+        res.redirect('/checklists')
+    } catch (error) {
+        let errors = error.erros;
+        res.status(422).render('checklist/edit', { checklist: {...checklist, errors} })
     }
 
 })
@@ -59,9 +70,9 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
     try {
         let checklist =  await Checklist.findByIdAndRemove(req.params.id);
-        res.status(200).json(checklist);
+        res.redirect('/checklists');
     } catch (err) {
-        res.status(422).json(err);
+        res.status(500).render('pages/error', { error: "Erro ao deletar a Lista de Tarefas" })
     }
 })
 
