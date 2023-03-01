@@ -3,6 +3,8 @@ const path = require('path') //Serve para encontrar qual caminho você está no 
 // Ajuda a dizer para o express qual pasta as VIEWS vao estar
 
 const checkListRouter = require('./src/routes/checklist')
+const taskRouter = require('./src/routes/task')
+
 const rootRouter = require('./src/routes/index')
 const methodOverride = require("method-override")
 
@@ -19,8 +21,9 @@ app.use(express.static(path.join(__dirname, 'public'))) // Arquivos estáticos v
 app.set('views', path.join(__dirname, 'src/views')) //Seta os caminhos da VIEWS, dizendo qual o diretorio atual e qual o diretorio das VIEWS
 app.set('view engine', 'ejs') // Diz por express que a VIEW ENGINE é o EJS
 
-app.use('/', rootRouter)
+app.use('/', rootRouter) // Incluir a rota
 app.use('/checklists', checkListRouter);
+app.use('/checklists', taskRouter.checklistDepedent);
 
 app.listen(3000, () => {
     console.log("listening on http://localhost:3000")
