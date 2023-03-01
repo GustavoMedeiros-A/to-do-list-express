@@ -24,6 +24,7 @@ app.set('view engine', 'ejs') // Diz por express que a VIEW ENGINE é o EJS
 app.use('/', rootRouter) // Incluir a rota
 app.use('/checklists', checkListRouter);
 app.use('/checklists', taskRouter.checklistDepedent);
+app.use('/tasks', taskRouter.simple)
 
 app.listen(3000, () => {
     console.log("listening on http://localhost:3000")

@@ -37,7 +37,6 @@ router.post('/', async (req, res)  => {
 
     try {
         await checklist.save()
-        console.log('passo aqui')
         res.redirect('/checklists')
     } catch (error) {
         res.status(422).render('checklists/new', { checklists: { ...checklist, error } })

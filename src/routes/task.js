@@ -1,6 +1,7 @@
 const express = require('express')
 
 const checklistDepedentRoute = express.Router();
+const simpleRouter = express.Router();
 
 const Checklist = require('../models/checklist')
 const Task = require('../models/task')
@@ -16,17 +17,31 @@ checklistDepedentRoute.get('/:id/tasks/new', async (req, res) => {
     }
 })
 
+simpleRouter.delete('/:id', async (req, res) => {
+    try{
+        let task = await Task.findById(req.params.id);;
+        let checklist = await Checklist.findById(task.checklist);
+        let taskToRemove = checklist.tasks.indexOf(task._id);
+        checklist.tasks.splice(taskToRemove, 1)
+        checklist.save();
+        res.redirect(`/checklist/${checklist._id}`)
+    } catch(error) {
+        res.status(422).render('pages/error', { error: "Erro ao remover uma tarefa"})
+
+    }
+})
+
 checklistDepedentRoute.post('/:id/tasks', async (req, res) => {
+
 
     let { name } = req.body.task //recebe parametro p/ descrever a task 
     let task = new Task({ name, checklist: req.params.id }) //cria a nova task e passa o ID da checklist que vai ser usada
-
     try {
-        await task.save()
-        console.log('passo aqui')
+        await task.save().catch(err => console.log(err))
         let checklist = await Checklist.findById(req.params.id); // Acha o Checklist que a gente procura
         checklist.tasks.push(task) // Salva a task dentro desse checklist especifico, porque isso nao é feito automaticamente
         await checklist.save();
+        console.log(checklist)
         res.redirect(`/checklists/${req.params.id}`)
 
     } catch (error) {
@@ -35,4 +50,9 @@ checklistDepedentRoute.post('/:id/tasks', async (req, res) => {
     }
 })
 
-module.exports = {checklistDepedent: checklistDepedentRoute}
+module.exports = {
+    checklistDepedent: checklistDepedentRoute,
+    simple: simpleRouter
+
+
+}
