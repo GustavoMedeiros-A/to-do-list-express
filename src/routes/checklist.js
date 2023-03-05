@@ -4,6 +4,8 @@ const router = express.Router();
 
 const Checklist = require("../models/checklist")
 
+const Task = require('../models/task')
+
 router.get('/', async (req, res) => {
     try {
         let checklists = await Checklist.find();
@@ -45,7 +47,12 @@ router.post('/', async (req, res)  => {
 
 router.get('/:id', async (req, res) => {
     try {
-        let checklist = await Checklist.findById(req.params.id).populate('tasks'); // Populate devolve as tasks que tão no checklist:id
+        // let task = await Task.findById("63ff93a34db7d3cf70e9d284")
+        // console.log(task)
+        let checklist = await Checklist.findById(req.params.id).populate('tasks');
+        // console.log(checklist)
+        // console.table(checklist.tasks)
+        // console.log(checklist.tasks[1].name)
         res.status(200).render('checklists/show', { checklist: checklist} )
     } catch (error) {
         res.status(500).render('pages/error', { error: "Erro ao exibir as Listas de Tarefas"} )
