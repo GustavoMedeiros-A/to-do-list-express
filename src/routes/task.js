@@ -36,12 +36,13 @@ checklistDepedentRoute.post('/:id/tasks', async (req, res) => {
 
     let { name } = req.body.task //recebe parametro p/ descrever a task 
     let task = new Task({ name, checklist: req.params.id }) //cria a nova task e passa o ID da checklist que vai ser usada
+    
     try {
         await task.save().catch(err => console.log(err))
         let checklist = await Checklist.findById(req.params.id); // Acha o Checklist que a gente procura
         checklist.tasks.push(task) // Salva a task dentro desse checklist especifico, porque isso nao é feito automaticamente
         await checklist.save();
-        console.log(checklist)
+        console.log(task)
         res.redirect(`/checklists/${req.params.id}`)
 
     } catch (error) {

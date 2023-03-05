@@ -20,15 +20,13 @@
       <% checklist.tasks.forEach(task => { %>
       <div class="columns">
         <div class="column is-four-fifths">
-          <input type="checkbox" /> <%= task.name %>
+          <input type="checkbox"/><%= task.name %>
         </div>
-
         <div class="column is-one-fifth">
-          <a href="/tasks/<%= task._id %>?_method=delete">Remove</a>
+          <a href="/checklists/<%= checklist._id %>/tasks/new" class="button is-success is-small">Remover</a>
         </div>
       </div>
       <% }) %>
-
      
     </div>
   </section>
